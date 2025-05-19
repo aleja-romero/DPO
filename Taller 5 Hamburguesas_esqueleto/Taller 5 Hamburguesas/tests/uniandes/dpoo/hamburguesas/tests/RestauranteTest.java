@@ -7,18 +7,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import uniandes.dpoo.hamburguesas.excepciones.HamburguesaException;
+import uniandes.dpoo.hamburguesas.excepciones.IngredienteRepetidoException;
 import uniandes.dpoo.hamburguesas.excepciones.NoHayPedidoEnCursoException;
+import uniandes.dpoo.hamburguesas.excepciones.ProductoFaltanteException;
+import uniandes.dpoo.hamburguesas.excepciones.ProductoRepetidoException;
 import uniandes.dpoo.hamburguesas.excepciones.YaHayUnPedidoEnCursoException;
+import uniandes.dpoo.hamburguesas.mundo.Combo;
+import uniandes.dpoo.hamburguesas.mundo.Ingrediente;
 import uniandes.dpoo.hamburguesas.mundo.Pedido;
+import uniandes.dpoo.hamburguesas.mundo.ProductoMenu;
 import uniandes.dpoo.hamburguesas.mundo.Restaurante;
 
 public class RestauranteTest {
@@ -111,6 +117,42 @@ public class RestauranteTest {
     }
     
     @Test
+    void testGetMenuBase() throws Exception {
+    	File dataIngredientes = new File("./data/ingredientes.txt");
+    	File dataMenu = new File("./data/menu.txt");
+    	File dataCombos = new File("./data/combos.txt");
+    	restaurante1.cargarInformacionRestaurante(dataIngredientes, dataMenu, dataCombos);
+    	
+    	ArrayList<ProductoMenu> menuBase = restaurante1.getMenuBase();
+    	assertEquals("corral", menuBase.get(0).getNombre(), "Los productos no se estan cargando correctamente");
+    	assertEquals("gaseosa", menuBase.get(21).getNombre(), "Los productos no se estan cargando correctamente");
+    }
+    
+    @Test
+    void testGetMenuCombos() throws Exception {
+    	File dataIngredientes = new File("./data/ingredientes.txt");
+    	File dataMenu = new File("./data/menu.txt");
+    	File dataCombos = new File("./data/combos.txt");
+    	restaurante1.cargarInformacionRestaurante(dataIngredientes, dataMenu, dataCombos);
+    	
+    	ArrayList<Combo> menuCombos = restaurante1.getMenuCombos();
+    	assertEquals("combo corral", menuCombos.get(0).getNombre(), "Los combos no se estan cargando correctamente");
+    	assertEquals("combo especial", menuCombos.get(3).getNombre(), "Los combos no se estan cargando correctamente");
+    }
+    
+    @Test
+    void testGetIngredientes() throws Exception {
+    	File dataIngredientes = new File("./data/ingredientes.txt");
+    	File dataMenu = new File("./data/menu.txt");
+    	File dataCombos = new File("./data/combos.txt");
+    	restaurante1.cargarInformacionRestaurante(dataIngredientes, dataMenu, dataCombos);
+    	
+    	ArrayList<Ingrediente> ingredientes = restaurante1.getIngredientes();
+    	assertEquals("lechuga", ingredientes.get(0).getNombre(), "Los ingredientes no se estan cargando correctamente");
+    	assertEquals("piña", ingredientes.get(14).getNombre(), "Los ingredientes no se estan cargando correctamente");
+    }
+    
+    @Test
     void testCargarInformacionRestaurante() throws Exception {
     	File dataIngredientes = new File("./data/ingredientes.txt");
     	File dataMenu = new File("./data/menu.txt");
@@ -124,11 +166,56 @@ public class RestauranteTest {
     
     @Test
     void testCargarIngredientesException() throws Exception{
-    	File dataIngredientes = crearArchivoTemporal("ingredientes.txt", "Tomate;1000\nTomate;800");
+    	Path archivoTemp = Files.createTempFile("temp_", ".txt");
+        Files.writeString(archivoTemp, "Tomate;1000\nTomate;800");
+        File archivo = archivoTemp.toFile();
+       
     	File dataMenu = new File("./data/menu.txt");
     	File dataCombos = new File("./data/combos.txt");
-    	restaurante1.cargarInformacionRestaurante(dataIngredientes, dataMenu, dataCombos);
     	
+    	assertThrows(IngredienteRepetidoException.class, () -> {
+    		restaurante1.cargarInformacionRestaurante(archivo, dataMenu, dataCombos);
+        });
+    }
+    
+    @Test
+    void testCargarMenuException() throws Exception{
+    	Path archivoTemp = Files.createTempFile("temp_", ".txt");
+        Files.writeString(archivoTemp, "corral;14000\ncorral;18000");
+        File archivo = archivoTemp.toFile();
+       
+        File dataIngredientes = new File("./data/ingredientes.txt");
+    	File dataCombos = new File("./data/combos.txt");
     	
+    	assertThrows(ProductoRepetidoException.class, () -> {
+    		restaurante1.cargarInformacionRestaurante(dataIngredientes, archivo, dataCombos);
+        });
+    }
+    
+    @Test
+    void testCargarCombosExceptionRepetido() throws Exception {
+    	Path archivoTemp = Files.createTempFile("temp_", ".txt");
+        Files.writeString(archivoTemp, "combo corral;10%;corral;papas medianas;gaseosa\ncombo corral;6%;corral;papas medianas;gaseosa");
+        File archivo = archivoTemp.toFile();
+       
+        File dataIngredientes = new File("./data/ingredientes.txt");
+        File dataMenu = new File("./data/menu.txt");
+    	
+    	assertThrows(ProductoRepetidoException.class, () -> {
+    		restaurante1.cargarInformacionRestaurante(dataIngredientes, dataMenu, archivo);
+        });
+    }
+    
+    void testCargarCombosExceptionFaltante() throws Exception {
+    	Path archivoTemp = Files.createTempFile("temp_", ".txt");
+        Files.writeString(archivoTemp, "combo corral;10%;corral;papas medianas;limonada");
+        File archivo = archivoTemp.toFile();
+       
+        File dataIngredientes = new File("./data/ingredientes.txt");
+        File dataMenu = new File("./data/menu.txt");
+    	
+    	assertThrows(ProductoFaltanteException.class, () -> {
+    		restaurante1.cargarInformacionRestaurante(dataIngredientes, dataMenu, archivo);
+        });
     }
 }
