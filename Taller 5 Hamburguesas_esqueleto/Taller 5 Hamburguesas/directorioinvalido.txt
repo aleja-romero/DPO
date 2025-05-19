@@ -1,0 +1,16 @@
+Cliente: Pepito Perez
+Dirección: Calle 100 #1-10
+----------------------------
+Salchipapa            15000
+Combo especial
+ Descuento:            0.07
+                        36735
+Hamburguesa            25000
+    +tomate            1000
+    +cebolla            1200
+    -lechuga            0
+                        27200
+----------------------------
+Precio Neto:  78935
+IVA:          14997
+Precio Total:  93932
