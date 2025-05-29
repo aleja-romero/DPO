@@ -74,6 +74,8 @@ public class VentanaAgregarRestaurante extends JFrame
     	int y = coordenadas[1];
     	boolean visitado = panelDetalles.getVisitado();
     	ventanaPrincipal.agregarRestaurante(nombre, calificacion,x,y, visitado);
+    	
+    	dispose();
     }
 
     /**

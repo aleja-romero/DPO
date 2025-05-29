@@ -1,5 +1,6 @@
 package uniandes.dpoo.swing.interfaz.principal;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
@@ -30,8 +31,11 @@ public class PanelDetallesRestaurante extends JPanel
 
     public PanelDetallesRestaurante( )
     {
+    	setLayout( new GridLayout(3, 1) );
         // Configura la etiqueta para el nombre
         // TODO completar el constructor
+    	JLabel labelNombre = new JLabel("Nombre");
+    	add(labelNombre);
 
         // Configura la etiqueta para la calificación
         // TODO completar el constructor

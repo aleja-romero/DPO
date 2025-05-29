@@ -35,9 +35,6 @@ public class PanelMapaAgregar extends JPanel implements MouseListener
         labMapa.setBorder( new LineBorder( Color.DARK_GRAY ) );
         labMapa.addMouseListener( this );
         add( labMapa );
-
-        this.x = 0;
-        this.y = 0;
     }
 
     /**

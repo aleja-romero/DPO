@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -61,8 +62,8 @@ public class VentanaMapa extends JFrame implements ActionListener
         // Agrega el panel con los RadioButtons y los configura
         // TODO completar
 
-        /*JPanel panelFiltros = new JPanel();
-        panelFiltros.setLayout(new BoxLayout(panelFiltros, BoxLayout.Y_AXIS));
+        JPanel panelFiltros = new JPanel();
+        panelFiltros.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         radioTodos = new JRadioButton("Todos", true);
         radioTodos.setActionCommand(TODOS);
@@ -76,12 +77,12 @@ public class VentanaMapa extends JFrame implements ActionListener
         grupoFiltros.add(radioTodos);
         grupoFiltros.add(radioVisitados);
         
-        panelFiltros.add(Box.createVerticalStrut(10));
         panelFiltros.add(radioTodos);
         panelFiltros.add(radioVisitados);
-        panelFiltros.add(Box.createVerticalStrut(10));
         
-        add(panelFiltros, BorderLayout.SOUTH);*/
+        add(panelFiltros, BorderLayout.SOUTH);
+        
+        panelMapa.actualizarMapa(ventanaPrincipal.getRestaurantes(true));
 
         // Termina de configurar la ventana y la muestra
         pack( );

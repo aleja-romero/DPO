@@ -107,6 +107,7 @@ public class VentanaPrincipal extends JFrame
         // TODO completar agregarRestaurante
     	Restaurante restauranteNuevo = new Restaurante(nombre, calificacion, x, y, visitado );
     	this.mundo.agregarRestaurante(restauranteNuevo);
+    	this.actualizarRestaurantes();
     }
 
     /**
@@ -128,6 +129,8 @@ public class VentanaPrincipal extends JFrame
     {
         List<Restaurante> todos = this.mundo.getRestaurantes( true );
         // TODO completar actualizarRestaurantes
+        pLista.actualizarRestaurantes(todos);
+        
     }
 
     /**
